@@ -1,6 +1,6 @@
 import { isFunction } from './predicate';
 
-export const fallbackProxy = (...objs: Array<Object | null | void>) => {
+export const fallbackProxy = (...objs: Array<any>) => {
     const truthy: Array<Object> = objs.filter(Boolean) as any;
     return new Proxy(truthy[objs.length - 1], {
         get(_, prop) {
