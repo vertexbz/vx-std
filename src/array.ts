@@ -73,3 +73,30 @@ export const copyUniq = <A>(arr: Array<A>) => {
 export const copyMerge = <A>(...arrs: Array<any>) => {
     return merge([], ...arrs);
 };
+
+/**
+ * Make iterator of array
+ */
+export const makeIterator = (iterator: Array<any> | Iterator<any>) => {
+    if(Array.isArray(iterator)){
+        let nextIndex = 0;
+
+        return {
+            next: function(){
+                return nextIndex < iterator.length ?
+                    {value: iterator[nextIndex++], done: false} :
+                    {done: true};
+            }
+        };
+    }
+
+    try{
+        const safariNext = new Function('iterator', 'makeIterator', 'var keysArray = []; for(var key of iterator){keysArray.push(key);} return makeIterator(keysArray).next;');
+        if (!iterator.next && safariNext) {
+            iterator.next = safariNext(iterator, makeIterator);
+        }
+    } catch (error) {}
+
+    return iterator;
+
+};
