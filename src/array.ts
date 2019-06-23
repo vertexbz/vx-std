@@ -77,11 +77,14 @@ export const copyMerge = <A>(...arrs: Array<any>) => {
 /**
  * Make iterator of array
  */
-export const makeIterator = <T>(iterator: Array<T> | Iterator<T>): Iterator<T> => {
+export const makeIterator = <T>(iterator: Array<T> | IterableIterator<T>): IterableIterator<T> => {
     if(Array.isArray(iterator)){
         let nextIndex = 0;
 
         return {
+            [Symbol.iterator]() {
+                return makeIterator(iterator);
+            },
             next() {
                 if (nextIndex < iterator.length) {
                     return { value: iterator[nextIndex++], done: false };
@@ -100,5 +103,4 @@ export const makeIterator = <T>(iterator: Array<T> | Iterator<T>): Iterator<T> =
     } catch (error) {}
 
     return iterator;
-
 };
