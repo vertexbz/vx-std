@@ -1,5 +1,6 @@
 export { MagicMap } from './classes/MagicMap';
 export { MagicObject } from './classes/MagicObject';
+export { MultiMap } from './classes/MultiMap';
 export { TemplateString } from './classes/TemplateString';
 
 import * as array from './array';

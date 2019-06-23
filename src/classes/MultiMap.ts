@@ -3,7 +3,7 @@ import { makeIterator } from '../array';
 export type EntryVisitor<K, V> = (value: V[], key: K, map: MultiMap<K, V>) => void;
 export type Visitor<K, V> = (value: V, key: K, map: MultiMap<K, V>) => void;
 
-export default class MultiMap<K = string, V = any> {
+export class MultiMap<K = string, V = any> {
     _ = new Map<K, V[]>();
 
     constructor(initial?: MultiMap<[K, V]>) {
