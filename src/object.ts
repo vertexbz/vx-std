@@ -79,32 +79,36 @@ visit.recursive = <O = object>(o: O, visitor: RecursiveObjectVisitorSig<keyof O,
     }, context);
 };
 
-export const _putIn = <O>(o: O, strPath: string, value: any, pickCurrent: (value: any) => any): O => {
+export const _putIn = <O>(o: O, strPath: string, value: any, pickCurrent?: (value: any) => any): O => {
     const pPath = path.parse(strPath);
     const lastKey = pPath.pop();
 
+    const root = pickCurrent ? pickCurrent(o) : o;
+
     if (lastKey) {
         let key;
-        let current = pickCurrent(o);
+        let current = root;
         while ((key = pPath.shift()) !== undefined) {
             if (!(key in current)) {
                 // @ts-ignore
                 current[key] = isNumber(pPath[0]) ? [] : {};
+            } else if (pickCurrent) {
+                current[key] = pickCurrent(current[key]);
             }
 
             // @ts-ignore
-            current = pickCurrent(current[key]);
+            current = current[key];
         }
 
         // @ts-ignore
         current[lastKey] = value;
     }
 
-    return o;
+    return root;
 };
 
 export const setIn = <O>(o: O, strPath: string, value: any): O => {
-    return _putIn(o, strPath, value, (a) => a);
+    return _putIn(o, strPath, value);
 };
 
 export const replaceIn = <O>(o: O, strPath: string, value: any): O => {
