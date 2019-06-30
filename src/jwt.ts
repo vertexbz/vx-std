@@ -14,11 +14,21 @@ type JWTBodyType = {
 /**
  * Extracts header object from JWT string (no verification is performed)
  */
-export const readHeader = (token: string): JWTHeaderType => JSON.parse(atob.call(null, token.split('.')[0]));
+export const readHeader = (token: string): JWTHeaderType | void => {
+    try {
+        return JSON.parse(atob.call(null, token.split('.')[0]));
+    } catch (e) {
+        return undefined;
+    }
+};
 
 /**
  * Extracts body object from JWT string (no verification is performed)
  */
-export const readBody = (token: string): JWTBodyType => {
-    return JSON.parse(atob.call(null, token.split('.')[1]));
+export const readBody = (token: string): JWTBodyType | void => {
+    try {
+        return JSON.parse(atob.call(null, token.split('.')[1]));
+    } catch (e) {
+        return undefined;
+    }
 };
