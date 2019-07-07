@@ -23,3 +23,16 @@ export const chainIfNeeded = (...fns: Array<Function | null | false | void | 0>)
         return result;
     };
 };
+
+/**
+ * Quick clone for functions
+ */
+export const clone = <F extends Function = Function>(fn: F): F => {
+    const cloned = new Function('return ' + fn.toString())();
+
+    for (const key in fn) {
+        cloned[key] = fn[key];
+    }
+
+    return cloned;
+};

@@ -1,6 +1,6 @@
 {
   "name": "vx-std",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "license": "MIT",
   "description": "VX JavaScript standard library",
   "main": "./dist/index.js",

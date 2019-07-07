@@ -22,10 +22,17 @@ export const isNumber = (subject: any): subject is number => {
 };
 
 /**
+ * Checks whether provided argument is an object
+ */
+export const isObject = (subject: any): subject is object => {
+    return subject && typeof subject === 'object';
+};
+
+/**
  * Checks whether provided argument is a plain object
  */
 export const isPlainObject = (subject: any): subject is object => {
-    if (typeof subject !== 'object' || subject === null) return false;
+    if (!isObject(subject)) return false;
     const proto = Object.getPrototypeOf(subject);
     if (proto === null) return true;
     let baseProto = proto;
