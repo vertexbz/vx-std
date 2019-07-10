@@ -28,3 +28,26 @@ export const parseUnits = (str: string) => str
     .split(' ')
     .map(parseFloat)
     .reduce((a, b) => a + b, 0);
+
+export const msFromTime = (hours: number, minutes: number, seconds: number) =>
+    (1000 * 60 * 60 * hours) +
+    (1000 * 60 * minutes) +
+    (1000 * seconds);
+
+export const msFromDate = (years: number, months: number, days: number) =>
+    (86400000 * 31 * 12 * years) +
+    (86400000 * 31 * months) +
+    (86400000 * days);
+
+/**
+ * Return unix timestamp (current timezone)
+ */
+export const getUnixTime = (): number => Math.floor(Date.now() / 1000);
+
+/**
+ * Return unix timestamp (UTC)
+ */
+export const getUtcUnixTime = (): number => {
+    const offset = (new Date()).getTimezoneOffset() * 60;
+    return Math.floor(Date.now() / 1000) + offset;
+};

@@ -43,3 +43,19 @@ export const fallbackProxy = (...objs: Array<any>) => {
         }
     });
 };
+
+export const overrideProxy = <S extends { [key: string]: any }, K extends keyof S>(subject: S, overrides: { [P in K]: any }): S => {
+    return new Proxy(subject, {
+        get(target: S, prop: K) {
+            if (prop in overrides) {
+                return overrides[prop];
+            }
+
+            if (isFunction(target[prop])) {
+                return target[prop].bind(target);
+            }
+
+            return target[prop];
+        }
+    });
+};
