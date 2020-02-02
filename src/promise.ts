@@ -10,6 +10,9 @@ export const wait = (time: number, reject: boolean = false): Promise<void> =>
  * Promise that can be manually rejected or resolved elsewhere
  */
 export class RemoteControlledPromise<T = any> extends Promise<T> {
+    protected _running = true;
+    protected _resolved = false;
+    protected _rejected = false;
     protected _resolver: undefined | ((value?: T | PromiseLike<T>) => void);
     protected _rejector: undefined | ((reason?: any) => void);
 
@@ -22,14 +25,30 @@ export class RemoteControlledPromise<T = any> extends Promise<T> {
 
     resolve(value?: T | PromiseLike<T>) {
         if (this._resolver) {
+            this._running = false;
+            this._resolved = true;
             this._resolver(value);
         }
     }
 
     reject(reason?: any) {
         if (this._rejector) {
+            this._running = false;
+            this._rejected = true;
             this._rejector(reason);
         }
+    }
+
+    get running(): boolean {
+        return this._running;
+    }
+
+    get resolved(): boolean {
+        return this._resolved;
+    }
+
+    get rejected(): boolean {
+        return this._rejected;
     }
 }
 

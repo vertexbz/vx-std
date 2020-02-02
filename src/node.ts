@@ -1,36 +1,62 @@
 import * as promise from './promise';
+import { RemoteControlledPromise } from './promise';
+import * as predicate from './predicate';
 
-type ServiceRoutineSig = () => Promise<void> | void;
+export type InitRoutineSig = () => Promise<object | void> | object | void
+export type ServiceRoutineSig = (params: object) => Promise<void> | void;
 
-export const service = (...routines: ServiceRoutineSig[]) => {
+export type ServiceConfig = {
+    keepAlive: boolean
+};
+
+export function service(config: ServiceConfig, ...routines: (ServiceRoutineSig | InitRoutineSig)[]): void;
+export function service(...routines: any[]) {
+    const options: ServiceConfig = {
+        keepAlive: false
+    };
+    if (predicate.isPlainObject(routines[0])) {
+        Object.assign(options, routines.shift());
+    }
     const loopRoutine = routines.pop() as ServiceRoutineSig;
 
-    let run = true;
+    const keepAlive = new RemoteControlledPromise();
 
     (['SIGHUP', 'SIGINT', 'SIGTERM'] as NodeJS.Signals[]).forEach((sig) => process.on(sig, () => {
         console.log(sig, 'Terminating worker pool...');
-        run = false;
+        keepAlive.reject(sig);
         // eslint-disable-next-line no-process-exit
         process.exit(0);
     }));
 
-
     return (async () => {
-        await Promise.all(routines.map((routine) => routine()));
+        const inits = await Promise.all((routines as InitRoutineSig[]).map((routine) => routine()));
 
-        while (run) {
+        const loopParams = inits.filter(predicate.isPlainObject)
+            .reduce((acc, obj) => {
+                return { ...obj, ...acc };
+            }, {
+                quit(reason?: any) {
+                    if (reason) {
+                        keepAlive.reject(reason);
+                    } else {
+                        keepAlive.resolve();
+                    }
+                }
+            });
+
+        while (keepAlive.running) {
             try {
-                await loopRoutine();
-                while (run) {
-                    await promise.wait(1000);
+                await loopRoutine(loopParams);
+                if (options.keepAlive) {
+                    await keepAlive;
                 }
             } catch (e) {
                 console.log('!!', 'Pool failed with error:', e);
-                if (run) {
+                if (keepAlive.running) {
                     await promise.wait(5000);
                     console.log('!!', 'Restarting...');
                 }
             }
         }
     })();
-};
+}
