@@ -6,7 +6,32 @@
 export const wait = (time: number, reject: boolean = false): Promise<void> =>
     new Promise((res, rej) => setTimeout(reject ? rej : res, time));
 
+/**
+ * Promise that can be manually rejected or resolved elsewhere
+ */
+export class RemoteControlledPromise<T = any> extends Promise<T> {
+    protected _resolver: undefined | ((value?: T | PromiseLike<T>) => void);
+    protected _rejector: undefined | ((reason?: any) => void);
 
+    constructor() {
+        super((res, rej) => {
+            this._resolver = res;
+            this._rejector = rej;
+        });
+    }
+
+    resolve(value?: T | PromiseLike<T>) {
+        if (this._resolver) {
+            this._resolver(value);
+        }
+    }
+
+    reject(reason?: any) {
+        if (this._rejector) {
+            this._rejector(reason);
+        }
+    }
+}
 
 
 const thenMethods = [

@@ -51,3 +51,10 @@ export const getUtcUnixTime = (): number => {
     const offset = (new Date()).getTimezoneOffset() * 60;
     return Math.floor(Date.now() / 1000) + offset;
 };
+
+/**
+ * Get UTC Date object
+ */
+export const getUtcDate = (): Date => {
+    return new Date((new Date()).toUTCString());
+};

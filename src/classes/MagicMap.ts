@@ -11,11 +11,11 @@ class MagicMap<K, C> {
         this._constructor = c;
     }
 
-    get(key: K): C {
+    get(key: K, constructorKey: never): C {
         const value = this._store.get(key);
 
         if (value === undefined) {
-            const leaf = this._constructor(key, this);
+            const leaf = this._constructor(constructorKey || key, this);
             this._store.set(key, leaf);
             return leaf;
         }

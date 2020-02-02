@@ -8,6 +8,7 @@ import * as array from './array';
 import * as func from './func';
 import * as host from './host';
 import * as jwt from './jwt';
+import * as node from './node';
 import * as number from './number';
 import * as object from './object';
 import * as objectmap from './objectmap';
@@ -24,6 +25,7 @@ export {
     func,
     host,
     jwt,
+    node,
     number,
     object,
     objectmap,
@@ -41,6 +43,7 @@ export default {
     func,
     host,
     jwt,
+    node,
     number,
     object,
     objectmap,
