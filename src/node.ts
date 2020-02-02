@@ -48,7 +48,7 @@ export function service(...routines: any[]) {
             try {
                 await loopRoutine(loopParams);
                 if (options.keepAlive) {
-                    await keepAlive;
+                    await keepAlive.promise;
                 }
             } catch (e) {
                 console.log('!!', 'Pool failed with error:', e);

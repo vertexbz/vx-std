@@ -58,3 +58,9 @@ export const getUtcUnixTime = (): number => {
 export const getUtcDate = (): Date => {
     return new Date((new Date()).toUTCString());
 };
+
+/**
+ * Convert stringified date back to Date object
+ * @param text
+ */
+export const textToDate = (text: string) => new Date(Date.parse(text));
