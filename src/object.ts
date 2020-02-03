@@ -1,4 +1,4 @@
-import { isNumber, isPlainObject } from './predicate';
+import { isNumber, isPlainObject, isFunction } from './predicate';
 import * as path from './path';
 
 type CasesType<C> = { [key: string]: C };
@@ -138,4 +138,19 @@ export const createCaseOf = <C>(cases: CasesType<C>) => (theCase: string): C | v
     }
 
     return undefined;
+};
+
+export const collectDescriptors = (subject: object, limit: any = Object): { [x: string]: PropertyDescriptor } => {
+    const result = {};
+
+    subject = isFunction(subject) ? subject.prototype : Object.getPrototypeOf(subject);
+
+    do {
+        // @ts-ignore
+        Object.assign(result, { ...Object.getOwnPropertyDescriptors(subject), ...result });
+        // @ts-ignore
+        subject = Object.getPrototypeOf(subject);
+    } while (subject && subject !== limit.prototype);
+
+    return result;
 };

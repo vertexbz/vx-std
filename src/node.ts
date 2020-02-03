@@ -1,5 +1,5 @@
+import RemoteControlledPromise from './classes/RemoteControlledPromise';
 import * as promise from './promise';
-import { RemoteControlledPromise } from './promise';
 import * as predicate from './predicate';
 
 export type InitRoutineSig = () => Promise<object | void> | object | void

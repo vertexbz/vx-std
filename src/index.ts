@@ -1,8 +1,10 @@
+export { default as FixedSizeArrayBuffer } from './classes/FixedSizeArrayBuffer';
+export { ImmutableDate } from './classes/ImmutableDate';
 export { MagicMap } from './classes/MagicMap';
 export { MagicObject } from './classes/MagicObject';
 export { MultiMap } from './classes/MultiMap';
+export { default as RemoteControlledPromise } from './classes/RemoteControlledPromise';
 export { TemplateString } from './classes/TemplateString';
-export { ImmutableDate } from './classes/ImmutableDate';
 
 import * as array from './array';
 import * as func from './func';
