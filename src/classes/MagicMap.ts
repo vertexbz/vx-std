@@ -4,14 +4,14 @@ type MagicMapVisitorSig<K, V> = (value: V, key: K, map: Map<K, V>) => void;
 
 export
 class MagicMap<K, C> {
-    _store = new Map<K, C>();
-    _constructor: LeafCreatorSig<K, C, MagicMap<K, C>>;
+    protected _store = new Map<K, C>();
+    protected _constructor: LeafCreatorSig<K, C, MagicMap<K, C>>;
 
-    constructor(c: LeafCreatorSig<K, C, MagicMap<K, C>>) {
+    public constructor(c: LeafCreatorSig<K, C, MagicMap<K, C>>) {
         this._constructor = c;
     }
 
-    get(key: K, constructorKey: never): C {
+    protected getOrCreate(key: K, constructorKey?: any): C {
         const value = this._store.get(key);
 
         if (value === undefined) {
@@ -24,20 +24,24 @@ class MagicMap<K, C> {
         return value;
     }
 
-    set(key: K, value: C) {
+    public get(key: K): C {
+        return this.getOrCreate(key);
+    }
+
+    public set(key: K, value: C) {
         this._store.set(key, value);
         return this;
     }
 
-    has(key: K): boolean {
+    public has(key: K): boolean {
         return this._store.has(key);
     }
 
-    delete(key: K) {
+    public delete(key: K) {
         return this._store.delete(key);
     }
 
-    forEach(visitor: MagicMapVisitorSig<K, C>, thisArg?: any): void {
+    public forEach(visitor: MagicMapVisitorSig<K, C>, thisArg?: any): void {
         this._store.forEach(visitor, thisArg);
     };
 }
