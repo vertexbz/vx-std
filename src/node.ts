@@ -6,13 +6,15 @@ export type InitRoutineSig = () => Promise<object | void> | object | void
 export type ServiceRoutineSig = (params: object) => Promise<void> | void;
 
 export type ServiceConfig = {
-    keepAlive: boolean
+    keepAlive?: boolean,
+    autostart?: boolean
 };
 
 export function service(config: ServiceConfig, ...routines: (ServiceRoutineSig | InitRoutineSig)[]): void;
 export function service(...routines: any[]) {
     const options: ServiceConfig = {
-        keepAlive: false
+        keepAlive: false,
+        autostart: true
     };
     if (predicate.isPlainObject(routines[0])) {
         Object.assign(options, routines.shift());
@@ -28,7 +30,7 @@ export function service(...routines: any[]) {
         process.exit(0);
     }));
 
-    return (async () => {
+    const runner = async () => {
         const inits = await Promise.all((routines as InitRoutineSig[]).map((routine) => routine()));
 
         const loopParams = inits.filter(predicate.isPlainObject)
@@ -58,5 +60,11 @@ export function service(...routines: any[]) {
                 }
             }
         }
-    })();
+    };
+
+    if (options.autostart) {
+        return runner();
+    }
+
+    return runner;
 }

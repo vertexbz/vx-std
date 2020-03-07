@@ -1,4 +1,5 @@
 export { default as FixedSizeArrayBuffer } from './classes/FixedSizeArrayBuffer';
+export { default as CallableInstance } from './classes/CallableInstance';
 export { ImmutableDate } from './classes/ImmutableDate';
 export { MagicMap } from './classes/MagicMap';
 export { MagicObject } from './classes/MagicObject';

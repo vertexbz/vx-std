@@ -1,7 +1,7 @@
 import { MagicObject } from './classes/MagicObject';
 import { createCaseOf } from './object';
 
-interface Action {
+export interface Action {
     type: string
 }
 
@@ -9,10 +9,10 @@ type ReducerCasesType<S, A> = {
     [key: string]: (state: S, action: A) => S
 }
 
-export const createReducer = <S, A extends Action>(cases: ReducerCasesType<S, A>) => {
+export const createReducer = <S, A extends Action>(cases: ReducerCasesType<S, A>, initialState: S) => {
     const reducers = createCaseOf(cases);
 
-    return (state: S, action: A) => {
+    return (state: S = initialState, action: A) => {
         const reducer = reducers(action.type);
         if (reducer) {
             return reducer(state, action);

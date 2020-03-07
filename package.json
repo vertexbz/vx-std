@@ -1,6 +1,6 @@
 {
   "name": "vx-std",
-  "version": "0.2.9",
+  "version": "0.2.15",
   "license": "MIT",
   "description": "VX JavaScript standard library",
   "main": "./dist/index.js",
@@ -19,7 +19,7 @@
   },
   "scripts": {
     "clean": "rimraf dist",
-    "build": "yarn clean && tsc",
+    "build": "yarn clean && tsc && cp -a src/classes/CallableInstance dist/classes/",
     "prepare": "yarn build && yarn docs",
     "lint": "tslint --project tsconfig.json --format codeFrame",
     "test": "jest -c ./jest.config.js",
