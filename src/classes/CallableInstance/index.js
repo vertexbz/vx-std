@@ -10,3 +10,4 @@ function CallableInstance(property) {
 CallableInstance.prototype = Object.create(Function.prototype);
 
 module.exports = CallableInstance;
+module.exports.default = CallableInstance;
