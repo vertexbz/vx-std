@@ -1,3 +1,5 @@
+"use strict";
+
 function CallableInstance(property) {
   var func = this.constructor.prototype[property];
   var apply = function() { return func.apply(apply, arguments); }
