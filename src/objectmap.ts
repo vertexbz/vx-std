@@ -1,8 +1,8 @@
 import { visit, setIn } from './object';
 
-type PathMapType = { [key: string]: any };
+type PathMapType = Record<string, any>;
 
-export const fromObject = (o: Object) => {
+export const fromObject = (o: Record<string, any>) => {
     const result: PathMapType = {};
     visit.recursive(o, (path, value) => {
         result[path.join('.')] = value;
@@ -12,7 +12,7 @@ export const fromObject = (o: Object) => {
 };
 
 export const toObject = (m: PathMapType) => {
-    const result: Object = {};
+    const result: Record<string, any> = {};
     visit(m, (path, value) => setIn(result, path, value));
     return result;
 };

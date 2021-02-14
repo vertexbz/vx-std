@@ -1,4 +1,3 @@
-// @flow
 import atob from 'atob';
 
 type JWTHeaderType = {

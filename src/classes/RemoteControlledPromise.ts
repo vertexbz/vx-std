@@ -1,4 +1,4 @@
-import { PromiseRejector, PromiseResolver } from '../promise';
+import type { PromiseRejector, PromiseResolver } from '../promise';
 
 /**
  * Promise that can be manually rejected or resolved elsewhere
@@ -23,7 +23,7 @@ class RemoteControlledPromise<T = any> {
         if (this._resolver) {
             this._state = 'resolved';
             this._resolvedValue = value;
-            this._resolver(value);
+            this._resolver(value!);
         }
     }
 

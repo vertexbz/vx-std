@@ -1,9 +1,10 @@
 import { getTag } from './type';
+import type { AnyFunction } from './type';
 
 /**
  * Checks whether provided argument is a function
  */
-export const isFunction = (subject: any): subject is Function => {
+export const isFunction = (subject: any): subject is AnyFunction => {
     return typeof subject === 'function' || subject instanceof Function;
 };
 
@@ -24,14 +25,14 @@ export const isNumber = (subject: any): subject is number => {
 /**
  * Checks whether provided argument is an object
  */
-export const isObject = (subject: any): subject is object => {
+export const isObject = (subject: any): subject is Record<string, any> => {
     return subject && typeof subject === 'object';
 };
 
 /**
  * Checks whether provided argument is a plain object
  */
-export const isPlainObject = (subject: any): subject is object => {
+export const isPlainObject = (subject: any): subject is Record<string, any> => {
     if (!isObject(subject)) return false;
     const proto = Object.getPrototypeOf(subject);
     if (proto === null) return true;

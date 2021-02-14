@@ -6,6 +6,7 @@ import { getTag } from './type';
  */
 export const parse = (path: string): Array<string | number> => {
     const result: Array<string | number> = [];
+    // eslint-disable-next-line no-useless-escape
     path.replace(/(?:\[(?<a>[0-9]+)\])|(?<o>[^\.\[]+)/g, (...args) => {
         const { a, o } = args.pop();
 
@@ -28,7 +29,6 @@ export const stringifyItem = (key: string | number): string => {
     if (isNumber(key)) {
         return '[' + key + ']';
     } else if (isString(key)) {
-        // @ts-ignore
         return key;
     } else {
         throw new Error(`Keys of type '${getTag(key)}' are a big no-no here.`);
@@ -41,6 +41,7 @@ export const stringify = (path: Array<string | number>): string => {
         .reduce((acc, item, i) => acc + ((i === 0 || isNumber(path[i])) ? item : ('.' + item)), '');
 };
 
+// eslint-disable-next-line no-useless-escape
 export const verify = (path: string): boolean => /^(?:(?:\[[0-9]+\])|(?:\.?[^\.\[]+))+$/.test(path);
 
 export const concat = (...paths: string[]): string => {

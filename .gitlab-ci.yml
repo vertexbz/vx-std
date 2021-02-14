@@ -1,0 +1,32 @@
+stages:
+  - lint
+  - test
+
+cache:
+  key: ${CI_PROJECT_PATH}
+  untracked: false
+  paths:
+    - node_modules/
+
+"ESlint":
+  stage: lint
+  image: node:15.8.0
+  before_script:
+    - sed -i.bak '/"prepare":/d' ./package.json
+  script:
+    - yarn install
+    - yarn lint
+  except:
+    - tags
+
+"Jest":
+  stage: test
+  image: node:15.8.0
+  before_script:
+    - sed -i.bak '/"prepare":/d' ./package.json
+  script:
+    - yarn install
+    - yarn test --coverage
+  except:
+    - tags
+

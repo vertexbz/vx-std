@@ -1,5 +1,8 @@
+.DS_Store
 /.idea
+/coverage
 /node_modules
 /dist
 /docs
 /yarn-error.log
+/.eslintcache

@@ -27,6 +27,6 @@ export class ActionStore extends MagicObject {
         return super(
             mountPoint ? (key) => mountPoint.toUpperCase() + ':' + key : (key) => key,
             (key) => key.toUpperCase()
-        )
+        );
     }
 }

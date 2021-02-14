@@ -24,6 +24,7 @@ export function service(...routines: any[]) {
     const keepAlive = new RemoteControlledPromise();
 
     (['SIGHUP', 'SIGINT', 'SIGTERM'] as NodeJS.Signals[]).forEach((sig) => process.on(sig, () => {
+        // eslint-disable-next-line no-console
         console.log(sig, 'Terminating worker pool...');
         keepAlive.reject(sig);
         // eslint-disable-next-line no-process-exit
@@ -53,9 +54,11 @@ export function service(...routines: any[]) {
                     await keepAlive.promise;
                 }
             } catch (e) {
+                // eslint-disable-next-line no-console
                 console.log('!!', 'Pool failed with error:', e);
                 if (keepAlive.running) {
                     await promise.wait(5000);
+                    // eslint-disable-next-line no-console
                     console.log('!!', 'Restarting...');
                 }
             }

@@ -1,4 +1,3 @@
-// @flow
 type RequestedSchemaType = 'http' | 'ws';
 
 // @ts-ignore

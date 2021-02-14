@@ -43,5 +43,5 @@ class MagicMap<K, C> {
 
     public forEach(visitor: MagicMapVisitorSig<K, C>, thisArg?: any): void {
         this._store.forEach(visitor, thisArg);
-    };
+    }
 }

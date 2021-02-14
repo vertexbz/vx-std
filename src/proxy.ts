@@ -1,13 +1,11 @@
 import { isFunction } from './predicate';
 
 export const fallbackProxy = (...objs: Array<any>) => {
-    const truthy: Array<Object> = objs.filter(Boolean) as any;
+    const truthy: Array<any> = objs.filter(Boolean);
     return new Proxy(truthy[objs.length - 1], {
         get(_, prop) {
-            for (const obj of objs) {
-                // @ts-ignore
+            for (const obj of truthy) {
                 if (prop in obj) {
-                    // @ts-ignore
                     const value = obj[prop];
                     if (isFunction(value)) {
                         return value.bind(obj);
@@ -17,10 +15,8 @@ export const fallbackProxy = (...objs: Array<any>) => {
             }
         },
         set(_, prop, value) {
-            for (const obj of objs) {
-                // @ts-ignore
+            for (const obj of truthy) {
                 if (prop in obj) {
-                    // @ts-ignore
                     obj[prop] = value;
                     return true;
                 }
@@ -29,8 +25,7 @@ export const fallbackProxy = (...objs: Array<any>) => {
             return false;
         },
         has(_, prop) {
-            for (const obj of objs) {
-                // @ts-ignore
+            for (const obj of truthy) {
                 if (prop in obj) {
                     return true;
                 }

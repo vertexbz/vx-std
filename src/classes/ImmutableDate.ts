@@ -1,5 +1,5 @@
 import { msFromDate, msFromTime } from '../time';
-import { ConstructorArgTypes } from '../type';
+import type { ConstructorArgTypes } from '../type';
 
 export class ImmutableDate extends Date {
     static of(...args: ConstructorArgTypes<typeof ImmutableDate>) {

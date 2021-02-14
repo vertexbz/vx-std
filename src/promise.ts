@@ -3,10 +3,10 @@
  * @param time delay time in milliseconds
  * @param reject when set to true promise will be rejected instead of being resolved after specified time (default: false)
  */
-export const wait = (time: number, reject: boolean = false): Promise<void> =>
+export const wait = (time: number, reject = false): Promise<void> =>
     new Promise((res, rej) => setTimeout(reject ? rej : res, time));
 
-export type PromiseResolver<T> = (value?: T | PromiseLike<T>) => void;
+export type PromiseResolver<T> = (value: T | PromiseLike<T>) => void;
 export type PromiseRejector = (reason?: any) => void;
 
 const thenMethods = [
@@ -53,12 +53,12 @@ export interface ResolvableInterface<R> {
  * console.log(result);                   // 42
  * ```
  */
-export const makeResolvable = <R, T extends {new(...args:any[]): ResolvableInterface<R>}>(Target: T): T & Promise<R> => {
+export const makeResolvable = <R, T extends {new(...args: any[]): ResolvableInterface<R>}>(Target: T): T & Promise<R> => {
     for (const method of thenMethods) {
-        // $FlowIgnore
-        Target.prototype[method] = function() {
+        Target.prototype[method] = function(...args: any[]) {
             const promise = this._run();
-            return promise[method].apply(promise, arguments);
+            // eslint-disable-next-line prefer-spread
+            return promise[method].apply(promise, args);
         };
     }
 

@@ -70,7 +70,7 @@ export const copyUniq = <A>(arr: Array<A>) => {
 /**
  * Merge provided arrays (immutable)
  */
-export const copyMerge = <A>(...arrs: Array<any>) => {
+export const copyMerge = <A>(...arrs: Array<A>) => {
     return merge([], ...arrs);
 };
 
@@ -78,7 +78,7 @@ export const copyMerge = <A>(...arrs: Array<any>) => {
  * Make iterator of array
  */
 export const makeIterator = <T>(iterator: Array<T> | IterableIterator<T>): IterableIterator<T> => {
-    if(Array.isArray(iterator)){
+    if (Array.isArray(iterator)) {
         let nextIndex = 0;
 
         return {
@@ -94,13 +94,6 @@ export const makeIterator = <T>(iterator: Array<T> | IterableIterator<T>): Itera
             }
         };
     }
-
-    try{
-        const safariNext = new Function('iterator', 'makeIterator', 'var keysArray = []; for(var key of iterator){keysArray.push(key);} return makeIterator(keysArray).next;');
-        if (!iterator.next && safariNext) {
-            iterator.next = safariNext(iterator, makeIterator);
-        }
-    } catch (error) {}
 
     return iterator;
 };

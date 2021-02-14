@@ -3,7 +3,7 @@
     "baseUrl": ".",
     "moduleResolution": "node",
     "target": "es5",
-    "lib": ["dom", "es2015"],
+    "lib": ["dom", "es2020"],
 
     "typeRoots": [
       "./node_modules/@types",
@@ -21,23 +21,15 @@
     "declarationDir": "dist",
     "outDir": "dist",
     "resolveJsonModule": true,
-    "importHelpers": false,
-    "plugins": [
-      {
-        "name": "typescript-tslint-plugin",
-        "alwaysShowRuleFailuresAsWarnings": false
-      }
-    ],
+    "importHelpers": true,
     "paths": {
       "*": [
-        "node_modules/*",
-        "typings/*"
+        "node_modules/*"
       ]
     }
   },
   "include": [
-    "./src/**/*",
-    "./typings/**/*"
+    "./src/**/*"
   ],
   "compileOnSave": false
 }

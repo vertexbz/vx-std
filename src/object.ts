@@ -2,10 +2,10 @@ import { isNumber, isPlainObject, isFunction } from './predicate';
 import * as path from './path';
 
 type CasesType<C> = { [key: string]: C };
-type ObjectMapperSig<K, V> = (key: string, value: V, context: any) => V | any;
-type RecursiveObjectMapperSig<K, V> = (key: Array<string | number>, value: V, context: any) => V | any;
-type ObjectVisitorSig<K, V> = (key: string, value: V, context: any) => void;
-type RecursiveObjectVisitorSig<K, V> = (key: Array<string | number>, value: V, context: any) => void;
+type ObjectMapperSig<V> = (key: string, value: V, context: any) => V | any;
+type RecursiveObjectMapperSig<V> = (key: Array<string | number>, value: V, context: any) => V | any;
+type ObjectVisitorSig<V> = (key: string, value: V, context: any) => void;
+type RecursiveObjectVisitorSig<V> = (key: Array<string | number>, value: V, context: any) => void;
 
 const _recursiveContextMark = Symbol();
 const _recursiveContext = (context: any) => {
@@ -17,7 +17,7 @@ const _recursiveContext = (context: any) => {
             return {
                 ...recursiveContext,
                 path: [...recursiveContext.path, key]
-            }
+            };
         }
     };
     return recursiveContext;
@@ -26,7 +26,7 @@ const _recursiveContext = (context: any) => {
 /**
  * Map object values
  */
-export const map = <O = object>(o: O, mapper: ObjectMapperSig<keyof O, any>, context?: any): O => {
+export const map = <O = object>(o: O, mapper: ObjectMapperSig<any>, context?: any): O => {
     if (o) {
         const result: { [P in keyof O]: O[P] | any } = ({} as any);
         for (const [key, value] of Object.entries(o)) {
@@ -42,7 +42,7 @@ export const map = <O = object>(o: O, mapper: ObjectMapperSig<keyof O, any>, con
 /**
  * Map object values, recursive
  */
-map.recursive = <O = object>(o: O, visitor: RecursiveObjectMapperSig<keyof O, any>, mapArrays?: boolean, context?: any): O => {
+map.recursive = <O = object>(o: O, visitor: RecursiveObjectMapperSig<any>, mapArrays?: boolean, context?: any): O => {
     context = (context && context[_recursiveContextMark]) ? context : _recursiveContext(context);
 
     return map(o, (key, value, context) => {
@@ -56,7 +56,7 @@ map.recursive = <O = object>(o: O, visitor: RecursiveObjectMapperSig<keyof O, an
     }, context);
 };
 
-export const visit = <O = object>(o: O, visitor: ObjectVisitorSig<keyof O, any>, context?: any): O => {
+export const visit = <O = object>(o: O, visitor: ObjectVisitorSig<any>, context?: any): O => {
     if (o) {
         for (const [key, value] of Object.entries(o)) {
             visitor(key, value, context);
@@ -65,7 +65,7 @@ export const visit = <O = object>(o: O, visitor: ObjectVisitorSig<keyof O, any>,
     return o;
 };
 
-visit.recursive = <O = object>(o: O, visitor: RecursiveObjectVisitorSig<keyof O, any>, visitArrays?: boolean, context?: any): O => {
+visit.recursive = <O = object>(o: O, visitor: RecursiveObjectVisitorSig<any>, visitArrays?: boolean, context?: any): O => {
     context = (context && context[_recursiveContextMark]) ? context : _recursiveContext(context);
 
     return visit(o, (key, value, context) => {
@@ -112,7 +112,7 @@ export const setIn = <O>(o: O, strPath: string, value: any): O => {
 };
 
 export const replaceIn = <O>(o: O, strPath: string, value: any): O => {
-    return _putIn(o, strPath, value, (a) => Array.isArray(a) ? [...a] : {...a});
+    return _putIn(o, strPath, value, (a) => Array.isArray(a) ? [...a] : { ...a });
 };
 
 export const getIn = <O, F>(o: O, strPath: string, fallbackValue?: F): any | F => {

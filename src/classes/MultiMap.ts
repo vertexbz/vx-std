@@ -15,13 +15,12 @@ export class MultiMap<K = string, V = any> {
     }
 
     get(key: K) {
-        return this._.get(key)
+        return this._.get(key);
     }
 
-    set(key: K, val: V) {
-        const args = Array.prototype.slice.call(arguments);
-
-        key = args.shift();
+    set(key: K, val: V): this;
+    set(...args: any[]) {
+        const key = args.shift();
 
         let entry = this.get(key);
         if (!entry) {
@@ -53,7 +52,7 @@ export class MultiMap<K = string, V = any> {
         }
 
         return false;
-    };
+    }
 
     has(key: K, val?: V) {
         const hasKey = this._.has(key);
@@ -63,14 +62,14 @@ export class MultiMap<K = string, V = any> {
 
         const entry = this.get(key) || [];
         return entry.indexOf(val as V) != -1;
-    };
+    }
 
     /**
      * @return {Array} all the keys in the map
      */
     keys() {
         return makeIterator(this._.keys());
-    };
+    }
 
     /**
      * @return {Array} all the values in the map
@@ -82,7 +81,7 @@ export class MultiMap<K = string, V = any> {
         });
 
         return makeIterator(vals);
-    };
+    }
 
     /**
      *
@@ -90,10 +89,10 @@ export class MultiMap<K = string, V = any> {
     forEachEntry(visitor: EntryVisitor<K, V>) {
         const keys = this.keys();
         let next;
-        while(!(next = keys.next()).done) {
+        while (!(next = keys.next()).done) {
             visitor(this.get(next.value) as V[], next.value, this);
         }
-    };
+    }
 
     forEach(visitor: Visitor<K, V>) {
         this.forEachEntry((entry, key) => {
@@ -101,7 +100,7 @@ export class MultiMap<K = string, V = any> {
                 visitor(item, key, this);
             });
         });
-    };
+    }
 
     clear() {
         this._.clear();

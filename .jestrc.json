@@ -1,0 +1,25 @@
+{
+  "roots": [
+    "<rootDir>"
+  ],
+  "testMatch": [
+    "<rootDir>/tests/**/?(*.)+(spec|test).ts"
+  ],
+  "transform": {
+    "^.+\\.ts": "ts-jest"
+  },
+  "setupFilesAfterEnv": [
+  ],
+  "snapshotSerializers": [
+  ],
+  "globals": {
+    "ts-jest": {
+      "tsconfig": "./tsconfig.jest.json"
+    }
+  },
+  "slowTestThreshold": 20,
+  "coveragePathIgnorePatterns": [
+    "/node_modules/",
+    "/tests/"
+  ]
+}
