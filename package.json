@@ -24,7 +24,7 @@
     "lint": "eslint --ext .ts --cache src tests",
     "prepare": "yarn lint && yarn test && yarn build && yarn docs",
     "test": "jest --no-cache --color --config .jestrc.json",
-    "docs": "typedoc -p . --theme default --target 'es6' --excludeNotExported --exclude ./src/index.ts --excludePrivate --ignoreCompilerErrors --out docs src/"
+    "docs": "typedoc --plugin typedoc-plugin-markdown --hideBreadcrumbs --exclude ./src/index.ts --excludePrivate --out docs src/"
   },
   "devDependencies": {
     "@types/atob": "^2.1.2",
@@ -41,7 +41,8 @@
     "rimraf": "^3.0.2",
     "ts-jest": "^26.5.1",
     "tslib": "^2.1.0",
-    "typedoc": "^0.20.24",
+    "typedoc": "^0.20.25",
+    "typedoc-plugin-markdown": "^3.4.5",
     "typescript": "^4.1.5"
   },
   "files": [
