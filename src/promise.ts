@@ -1,3 +1,5 @@
+import type { ConstructorArgTypes } from './type';
+
 /**
  * Wait for given period of time
  * @param time delay time in milliseconds
@@ -17,6 +19,17 @@ const thenMethods = [
 export interface ResolvableInterface<R> {
     _run(): Promise<R>
 }
+
+export interface ResolvableInterfaceCls<R> {
+    new(...args: any[]): ResolvableInterface<R>
+}
+
+export interface ResolvableCls<R, T extends ResolvableInterfaceCls<R> = any> {
+    new (...args: ConstructorArgTypes<T>): InstanceType<T> & Promise<R>
+}
+
+export type ResultExtractor<T> = T extends ResolvableInterfaceCls<infer U> ? U : never;
+export type BaseExtractor<T> = T extends ResolvableInterfaceCls<any> ? T : never;
 
 /**
  * Mixes helper methods into class to make its promise-like objects.
@@ -53,14 +66,14 @@ export interface ResolvableInterface<R> {
  * console.log(result);                   // 42
  * ```
  */
-export const makeResolvable = <R, T extends {new(...args: any[]): ResolvableInterface<R>}>(Target: T): T & Promise<R> => {
+export const makeResolvable = <T, R = ResultExtractor<BaseExtractor<T>>>(Target: T): ResolvableCls<R, BaseExtractor<T>> => {
     for (const method of thenMethods) {
-        Target.prototype[method] = function(...args: any[]) {
+        (Target as BaseExtractor<T>).prototype[method] = function(...args: any[]) {
             const promise = this._run();
             // eslint-disable-next-line prefer-spread
             return promise[method].apply(promise, args);
         };
     }
 
-    return Target as T & Promise<R>;
+    return Target as any;
 };
