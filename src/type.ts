@@ -18,4 +18,8 @@ export type AnyFunction = (...args: any[]) => any;
 
 export type ConstructorArgTypes<T> = T extends new (...args: infer U) => any ? U : never
 
+export type Diff<T, U> = T extends U ? never : T;
 
+export type NotNullable<T> = Diff<T, null | undefined>;
+
+export type ValueOf<T> = T[keyof T];

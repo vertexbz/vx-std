@@ -2,7 +2,7 @@ export default class FixedSizeArrayBuffer<T = any> {
     protected _size: number;
     protected _store: T[] = [];
 
-    constructor(size: number) {
+    public constructor(size: number) {
         this._size = size;
     }
 

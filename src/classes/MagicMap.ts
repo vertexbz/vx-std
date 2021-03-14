@@ -41,6 +41,15 @@ class MagicMap<K, C> {
         return this._store.delete(key);
     }
 
+    public clear() {
+        this._store.clear();
+        return this;
+    }
+
+    public keys(): IterableIterator<K> {
+        return this._store.keys();
+    }
+
     public forEach(visitor: MagicMapVisitorSig<K, C>, thisArg?: any): void {
         this._store.forEach(visitor, thisArg);
     }

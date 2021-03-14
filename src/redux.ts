@@ -22,7 +22,7 @@ export const createReducer = <S, A extends Action>(cases: ReducerCasesType<S, A>
 };
 
 export class ActionStore extends MagicObject {
-    constructor(mountPoint?: string) {
+    public constructor(mountPoint?: string) {
         // @ts-ignore
         return super(
             mountPoint ? (key) => mountPoint.toUpperCase() + ':' + key : (key) => key,

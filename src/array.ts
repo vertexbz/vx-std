@@ -1,7 +1,7 @@
 /**
  * Compares two arrays by its contents (order matters)
  */
-export const equal = <A = any, B = any>(a: Array<A>, b: Array<B>): boolean => {
+export const equal = <A = any, B = any>(a: A[], b: B[]): boolean => {
     if (a.length !== b.length) {
         return false;
     }
@@ -19,7 +19,7 @@ export const equal = <A = any, B = any>(a: Array<A>, b: Array<B>): boolean => {
 /**
  * Remove item from array (mutable)
  */
-export const remove = <T = any>(arr: Array<T>, val: T) => {
+export const remove = <T = any>(arr: T[], val: T): T[] => {
     const index = arr.indexOf(val);
     if (index >= 0) {
         arr.splice(index, 1);
@@ -31,7 +31,7 @@ export const remove = <T = any>(arr: Array<T>, val: T) => {
 /**
  * Remove duplicates from array (mutable)
  */
-export const uniq = <A>(arr: Array<A>) => {
+export const uniq = <T>(arr: T[]): T[] => {
     for (let i = 0; i < arr.length; ++i) {
         let index = -1;
 
@@ -45,7 +45,7 @@ export const uniq = <A>(arr: Array<A>) => {
 /**
  * Merge provided arrays (concatenate to first one, mutable)
  */
-export const merge = <A>(arr: Array<A>, ...arrs: Array<any>) => {
+export const merge = <T>(arr: T[], ...arrs: T[][]): T[] => {
     for (const a of arrs.filter(Array.isArray)) {
         arr.push(...a);
     }
@@ -56,21 +56,21 @@ export const merge = <A>(arr: Array<A>, ...arrs: Array<any>) => {
 /**
  * Remove item from array (immutable)
  */
-export const copyRemove = <T>(arr: Array<T>, val: T) => {
+export const copyRemove = <T>(arr: T[], val: T) => {
     return remove([...arr], val);
 };
 
 /**
  * Remove duplicates from array (immutable)
  */
-export const copyUniq = <A>(arr: Array<A>) => {
+export const copyUniq = <T>(arr: T[]): T[] => {
     return uniq([...arr]);
 };
 
 /**
  * Merge provided arrays (immutable)
  */
-export const copyMerge = <A>(...arrs: Array<A>) => {
+export const copyMerge = <T>(...arrs: T[][]): T[] => {
     return merge([], ...arrs);
 };
 

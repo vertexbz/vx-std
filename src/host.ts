@@ -39,5 +39,5 @@ export const createHost = (schema: RequestedSchemaType = 'http', prefix?: string
  */
 export const stripPort = (host: string): string => {
     host = host.split('//').pop() || host;
-    return host.split(':')[0] || host;
+    return host.split(':').shift() || host;
 };

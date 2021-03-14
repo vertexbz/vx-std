@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { isNumber, isPlainObject, isFunction } from './predicate';
 import * as path from './path';
 

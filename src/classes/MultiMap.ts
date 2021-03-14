@@ -1,12 +1,13 @@
 import { makeIterator } from '../array';
+import { MagicMap } from './MagicMap';
 
-export type EntryVisitor<K, V> = (value: V[], key: K, map: MultiMap<K, V>) => void;
-export type Visitor<K, V> = (value: V, key: K, map: MultiMap<K, V>) => void;
+export type EntryVisitor<K, V, M> = (value: V[], key: K, map: M) => void;
+export type Visitor<K, V, M> = (value: V, key: K, map: M) => void;
 
 export class MultiMap<K = string, V = any> {
-    _ = new Map<K, V[]>();
+    protected store = new MagicMap<K, V[]>(() => [] as V[]);
 
-    constructor(initial?: MultiMap<[K, V]>) {
+    public constructor(initial?: MultiMap<[K, V]>) {
         if (initial) {
             initial.forEach(([key, value]: [K, V]) => {
                 this.set(key, value);
@@ -14,67 +15,54 @@ export class MultiMap<K = string, V = any> {
         }
     }
 
-    get(key: K) {
-        return this._.get(key);
+    public get(key: K): V[] {
+        return this.store.get(key);
     }
 
-    set(key: K, val: V): this;
-    set(...args: any[]) {
-        const key = args.shift();
-
-        let entry = this.get(key);
-        if (!entry) {
-            entry = [];
-            this._.set(key, entry);
-        }
-
-        Array.prototype.push.apply(entry, args);
+    public set(key: K, ...vals: V[]): this {
+        const entry = this.store.get(key);
+        Array.prototype.push.apply(entry, vals);
         return this;
     }
 
-    delete(key: K, val?: V) {
+    public delete(key: K, ...vals: V[]): boolean {
         if (!this.has(key))
             return false;
 
-        if (arguments.length == 1) {
-            this._.delete(key);
+        if (vals.length == 0) {
+            this.store.delete(key);
             return true;
-        } else {
-            const entry = this.get(key);
+        }
 
-            if (entry) {
-                const idx = entry.indexOf(val as V);
-                if (idx != -1) {
-                    entry.splice(idx, 1);
-                    return true;
-                }
+        const entry = this.get(key);
+
+        let removed = false;
+        for (const val of vals) {
+            const idx = entry.indexOf(val as V);
+            if (idx != -1) {
+                entry.splice(idx, 1);
+                removed = true;
             }
         }
 
-        return false;
+        return removed;
     }
 
-    has(key: K, val?: V) {
-        const hasKey = this._.has(key);
+    public has(key: K, val?: V): boolean {
+        const hasKey = this.store.has(key);
 
         if (arguments.length == 1 || !hasKey)
             return hasKey;
 
         const entry = this.get(key) || [];
-        return entry.indexOf(val as V) != -1;
+        return entry.indexOf(val!) != -1;
     }
 
-    /**
-     * @return {Array} all the keys in the map
-     */
-    keys() {
-        return makeIterator(this._.keys());
+    public keys(): IterableIterator<K> {
+        return this.store.keys();
     }
 
-    /**
-     * @return {Array} all the values in the map
-     */
-    values() {
+    public values(): IterableIterator<V> {
         const vals: V[] = [];
         this.forEachEntry((entry: V[]) => {
             vals.push(...entry);
@@ -83,10 +71,7 @@ export class MultiMap<K = string, V = any> {
         return makeIterator(vals);
     }
 
-    /**
-     *
-     */
-    forEachEntry(visitor: EntryVisitor<K, V>) {
+    public forEachEntry(visitor: EntryVisitor<K, V, MultiMap<K, V>>): void {
         const keys = this.keys();
         let next;
         while (!(next = keys.next()).done) {
@@ -94,7 +79,7 @@ export class MultiMap<K = string, V = any> {
         }
     }
 
-    forEach(visitor: Visitor<K, V>) {
+    public forEach(visitor: Visitor<K, V, MultiMap<K, V>>): void {
         this.forEachEntry((entry, key) => {
             entry.forEach((item) => {
                 visitor(item, key, this);
@@ -102,11 +87,12 @@ export class MultiMap<K = string, V = any> {
         });
     }
 
-    clear() {
-        this._.clear();
+    public clear(): this {
+        this.store.clear();
+        return this;
     }
 
-    get size() {
+    public get size(): number {
         let total = 0;
 
         this.forEachEntry((value) => {

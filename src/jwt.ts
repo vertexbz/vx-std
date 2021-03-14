@@ -1,8 +1,9 @@
 import atob from 'atob';
 
-type JWTHeaderType = {
-
-};
+interface JWTHeaderType {
+    alg: string;
+    typ: string;
+}
 
 type JWTBodyType = {
     iat: number,
@@ -13,7 +14,7 @@ type JWTBodyType = {
 /**
  * Extracts header object from JWT string (no verification is performed)
  */
-export const readHeader = (token: string): JWTHeaderType | void => {
+export const readHeader = (token: string): JWTHeaderType | undefined => {
     try {
         return JSON.parse(atob.call(null, token.split('.')[0]));
     } catch (e) {
@@ -24,7 +25,7 @@ export const readHeader = (token: string): JWTHeaderType | void => {
 /**
  * Extracts body object from JWT string (no verification is performed)
  */
-export const readBody = (token: string): JWTBodyType | void => {
+export const readBody = (token: string): JWTBodyType | undefined => {
     try {
         return JSON.parse(atob.call(null, token.split('.')[1]));
     } catch (e) {

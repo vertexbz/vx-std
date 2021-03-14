@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import RemoteControlledPromise from './classes/RemoteControlledPromise';
 import * as promise from './promise';
 import * as predicate from './predicate';
@@ -21,7 +22,7 @@ export function service(...routines: any[]) {
     }
     const loopRoutine = routines.pop() as ServiceRoutineSig;
 
-    const keepAlive = new RemoteControlledPromise();
+    const keepAlive = new RemoteControlledPromise<undefined>();
 
     (['SIGHUP', 'SIGINT', 'SIGTERM'] as NodeJS.Signals[]).forEach((sig) => process.on(sig, () => {
         // eslint-disable-next-line no-console

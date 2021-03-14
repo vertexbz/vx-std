@@ -1,6 +1,6 @@
 {
   "name": "vx-std",
-  "version": "0.2.18",
+  "version": "0.2.19",
   "license": "MIT",
   "description": "VX JavaScript standard library",
   "main": "./dist/index.js",
@@ -27,6 +27,7 @@
     "docs": "typedoc --plugin typedoc-plugin-markdown --hideBreadcrumbs --exclude ./src/index.ts --excludePrivate --out docs src/"
   },
   "devDependencies": {
+    "@avaly/eslint-plugin-import-order": "^2.0.0",
     "@types/atob": "^2.1.2",
     "@types/btoa": "^1.2.3",
     "@types/jest": "^26.0.20",
