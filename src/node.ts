@@ -60,7 +60,7 @@ export function fork(module: string, payload: Record<string, any>, forkOptions?:
 
 export function paramsFromJsonPayload<P = Record<string, any>>(offset = 2, base?: P): () => Promise<P> | P {
     return function (): Promise<P> | P {
-        return Object.assign({}, base || {}, JSON.parse(process.argv[offset]));
+        return Object.assign({}, base || {}, JSON.parse(process.argv[offset] || '{}'));
     };
 }
 
@@ -80,7 +80,8 @@ export type ServiceConfig = {
     keepAlive?: boolean,
     autostart?: boolean,
     terminationDelay?: number,
-    restartDelay?: number
+    restartDelay?: number,
+    log?(...args: any[]): void;
 };
 
 export function service(loopRoutine: ServiceRoutineSig): void;
@@ -99,7 +100,9 @@ export function service(...routines: any[]) {
         keepAlive: false,
         autostart: true,
         terminationDelay: 0,
-        restartDelay: 5000
+        restartDelay: 5000,
+        // eslint-disable-next-line no-console
+        log: console.log.bind(console)
     };
     if (predicate.isPlainObject(routines[0])) {
         Object.assign(options, routines.shift());
@@ -112,7 +115,7 @@ export function service(...routines: any[]) {
     (['SIGHUP', 'SIGINT', 'SIGTERM'] as NodeJS.Signals[]).forEach((sig) => process.on(sig, async () => {
         if (options.terminationDelay) {
             // eslint-disable-next-line no-console
-            console.log(sig, 'Terminating in ' + options.terminationDelay + 'ms...');
+            options.log!('!!', sig, 'Terminating in ' + options.terminationDelay + 'ms...');
             await promise.wait(options.terminationDelay);
         }
 
@@ -121,7 +124,7 @@ export function service(...routines: any[]) {
         }
 
         // eslint-disable-next-line no-console
-        console.log(sig, 'Terminating ...');
+        options.log!('!!', sig, 'Terminating ...');
         keepAlive.reject(sig);
         // eslint-disable-next-line no-process-exit
         process.exit(0);
@@ -135,6 +138,7 @@ export function service(...routines: any[]) {
                 return { ...obj, ...acc };
             }, {});
 
+        options.log!('!!', 'Starting...');
         while (keepAlive.running) {
             try {
                 await loopRoutine({
@@ -158,11 +162,11 @@ export function service(...routines: any[]) {
                 }
             } catch (e) {
                 // eslint-disable-next-line no-console
-                console.log('!!', 'Worker failed with error:', e);
+                options.log!('!!', 'Worker failed with error:', e);
                 if (keepAlive.running) {
                     await promise.wait(options.restartDelay!);
                     // eslint-disable-next-line no-console
-                    console.log('!!', 'Restarting...');
+                    options.log!('!!', 'Restarting...');
                 }
             }
         }
