@@ -2,10 +2,10 @@ import { fork as nodeFork, spawn as nodeSpawn } from 'child_process';
 import { isNumber } from '../predicate';
 import * as promise from '../promise';
 import Child from './Child';
+import RemoteControlledPromise from './RemoteControlledPromise';
 
 import type { ForkOptions as NodeForkOptions, SpawnOptions as NodeSpawnOptions } from 'child_process';
 import type { SpawnSig } from './Child';
-import RemoteControlledPromise from './RemoteControlledPromise';
 
 export type RestartType = boolean | 'zero' | 'nonzero';
 
