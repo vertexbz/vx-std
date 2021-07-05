@@ -138,12 +138,12 @@ export function service(...routines: any[]): StartedServiceResult | PreparedServ
                 }
             } catch (e) {
                 options.error!('Worker failed with error:', e.stack);
+                if (options.throwOut) {
+                    throw e;
+                }
                 if (keepAlive.running) {
                     await promise.wait(options.restartDelay!);
                     options.log!('Restarting...');
-                }
-                if (options.throwOut) {
-                    throw e;
                 }
             }
         }
