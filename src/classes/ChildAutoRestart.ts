@@ -10,6 +10,7 @@ import type { SpawnSig } from './Child';
 export type RestartType = boolean | 'zero' | 'nonzero';
 
 export interface AutoRestartOptions {
+    throw?: boolean;
     restartDelay?: number;
     restart?: RestartType;
 }
@@ -63,7 +64,7 @@ export default class ChildAutoRestart extends Child {
                 });
             } else {
                 const error = this.exitError(code);
-                if (error) {
+                if (error && this._options.throw !== false) {
                     this._promise.reject(error);
                 } else {
                     this._promise.resolve();
