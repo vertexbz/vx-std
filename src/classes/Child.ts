@@ -5,6 +5,8 @@ import type { Readable, Writable } from 'stream';
 import type net from 'net';
 
 export type SpawnSig = () => ChildProcess;
+export type ResolveSig = () => void;
+export type RejectSig = (e: Error) => void;
 
 export default class Child {
     protected _code = -1;
@@ -68,14 +70,7 @@ export default class Child {
                 res();
                 return;
             }
-            process.on('close', (code) => {
-                const error = this.exitError(code || 0);
-                if (error) {
-                    rej(error);
-                } else {
-                    res();
-                }
-            });
+            process.on('close', this.handleClose.bind(this, res, rej));
         });
     }
 
@@ -94,6 +89,15 @@ export default class Child {
         const awaiter = this._join();
         this._process.kill(signal);
         return awaiter;
+    }
+
+    protected handleClose(res: ResolveSig, rej: RejectSig, code: number) {
+        const error = this.exitError(code || 0);
+        if (error) {
+            rej(error);
+        } else {
+            res();
+        }
     }
 
     protected exitError(code: number) {

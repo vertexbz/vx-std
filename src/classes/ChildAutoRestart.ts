@@ -5,7 +5,7 @@ import Child from './Child';
 import RemoteControlledPromise from './RemoteControlledPromise';
 
 import type { ForkOptions as NodeForkOptions, SpawnOptions as NodeSpawnOptions } from 'child_process';
-import type { SpawnSig } from './Child';
+import type { SpawnSig , RejectSig, ResolveSig } from './Child';
 
 export type RestartType = boolean | 'zero' | 'nonzero';
 
@@ -29,13 +29,13 @@ export default class ChildAutoRestart extends Child {
     protected _stop = false;
 
     public static fork(module: string, args: string[] = [], options: ForkOptions = {}): Promise<ChildAutoRestart> {
-        const { restartDelay = true, restart = true, ...forkOptions } = options;
-        return this.init<ChildAutoRestart>(() => nodeFork(module, args, forkOptions), { restartDelay, restart });
+        const { restartDelay = true, restart = true, 'throw': t = true, ...forkOptions } = options;
+        return this.init<ChildAutoRestart>(() => nodeFork(module, args, forkOptions), { restartDelay, restart, 'throw': t });
     }
 
     public static spawn(command: string, args: string[] = [], options: SpawnOptions = {}): Promise<ChildAutoRestart> {
-        const { restartDelay = true, restart = true, ...forkOptions } = options;
-        return this.init<ChildAutoRestart>(() => nodeSpawn(command, args, forkOptions), { restartDelay, restart });
+        const { restartDelay = true, restart = true, 'throw': t = true, ...forkOptions } = options;
+        return this.init<ChildAutoRestart>(() => nodeSpawn(command, args, forkOptions), { restartDelay, restart, 'throw': t });
     }
 
     public constructor(spawn: SpawnSig, options: AutoRestartOptions) {
@@ -73,6 +73,15 @@ export default class ChildAutoRestart extends Child {
         });
         
         return process;
+    }
+
+    protected handleClose(res: ResolveSig, rej: RejectSig, code: number) {
+        const error = this.exitError(code || 0);
+        if (error && this._options.throw !== false) {
+            rej(error);
+        } else {
+            res();
+        }
     }
 
     protected async start(): Promise<this> {
