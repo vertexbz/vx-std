@@ -1,6 +1,6 @@
 {
   "name": "vx-std",
-  "version": "0.2.29",
+  "version": "0.2.30",
   "license": "MIT",
   "description": "VX JavaScript standard library",
   "main": "./dist/index.js",
@@ -48,5 +48,8 @@
   },
   "files": [
     "dist"
-  ]
+  ],
+  "browser": {
+    "child_process": "./shims/empty.js"
+  }
 }
