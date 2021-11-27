@@ -15,7 +15,7 @@ export default class FileWatcher {
 
     protected watch() {
         let fsWait: NodeJS.Timeout | number | null = null;
-        const watcher = fs.watch(this._path, { encoding: 'buffer', persistent: true, recursive: true }, (eventType, fileName) => {
+        const watcher = fs.watch(this._path, { encoding: 'buffer', persistent: true, recursive: false }, (eventType, fileName) => {
             if (fileName) {
                 if (fsWait) {
                     clearTimeout(fsWait as any);
