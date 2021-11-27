@@ -1,5 +1,6 @@
 export { default as FixedSizeArrayBuffer } from './classes/FixedSizeArrayBuffer';
 export { default as CallableInstance } from './classes/CallableInstance';
+export { default as FileWatcher } from './classes/FileWatcher';
 export { ImmutableDate } from './classes/ImmutableDate';
 export { MagicMap } from './classes/MagicMap';
 export { MagicObject } from './classes/MagicObject';
@@ -9,6 +10,7 @@ export { TemplateString } from './classes/TemplateString';
 
 import * as array from './array';
 import * as func from './func';
+import * as fs from './fs';
 import * as host from './host';
 import * as jwt from './jwt';
 import * as node from './node';
@@ -26,6 +28,7 @@ import * as type from './type';
 export {
     array,
     func,
+    fs,
     host,
     jwt,
     node,

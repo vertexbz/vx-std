@@ -16,6 +16,14 @@ export const isString = (subject: any): subject is string => {
 };
 
 /**
+ * Checks whether provided argument is a numeric string
+ */
+export const isNumeric = (str: string): boolean => {
+    // @ts-ignore
+    return !isNaN(str) && !isNaN(parseFloat(str));
+};
+
+/**
  * Checks whether provided argument is a number
  */
 export const isNumber = (subject: any): subject is number => {
